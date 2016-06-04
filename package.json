@@ -1,0 +1,10 @@
+{
+  "name": "Posist_Challenge",
+  "version": "0.0.1",
+  "dependencies": {
+    "body-parser": "latest",
+    "chance": "^1.0.3",
+    "express": "latest",
+    "mongoose": "latest"
+  }
+}

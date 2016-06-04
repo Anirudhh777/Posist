@@ -1,0 +1,164 @@
+<div ng-controller="mainController" class="container">
+    <div>
+        <button type="button" class="btn btn-info pull-right" data-toggle="modal" data-target="#myModalCustomer" data-backdrop="static" data-keyboard="false" id="addButton">Add Customer</button>
+    </div>
+	<div class="container">
+        <div class="form-group">
+            <form>
+                <input type='text' name = "search" ng-model="searchText" class="form-group" id="search" placeholder="Search">
+            </form>
+        </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>DOB</th>
+                <th>Address</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="customer in customerData | filter:searchText | orderBy:'-created_at'">
+                <td>{{customer.name}}</td>
+                <td>{{customer.mobile}}</td>
+                <td>{{customer.phone}}</td>
+                <td>{{customer.email}}</td>
+                <td mediumDate>{{customer.dob | date : format : mediumDate}}</td>
+                <td>{{customer.address[0]}}</td>
+                <td><a data-toggle="modal" data-target="#myModalCustomer" data-backdrop="static" data-keyboard="false" ng-click="editCustomer(customer._id)">Edit</a>| <a ng-click="deleteCustomer(customer._id)">Delete</a> | <a data-toggle="modal" data-target="#myModalResult" data-backdrop="static" data-keyboard="false"
+                    ng-click="findBills(customer._id)">Report</a></td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    <div class="modal fade" id="myModalResult" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class= "text-center">
+                    <h3>No of Bills</h3><h4>{{noOfBills}}</h4>
+                    <h3>Amount:</h3><h4>{{amount}}</h4>
+                    <h3>Avg Amount:</h3><h4>{{avgAmount}}</h4>
+                </div>
+                
+
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+            </div>
+        </div>
+	 <div class="modal fade" id="myModalCustomer" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3>Register</h3>
+                        <form name="newCustomer" novalidate role="form">
+                            <div class="form-group">
+                                <label for="name">Name:</label><br>
+                                <input type='text' name="name" ng-model='name' ng-minlength="3" ng-pattern="string" required class="form-control"><br>
+                                <div ng-messages="newCustomer.name.$error" ng-show='newCustomer.$submitted || newCustomer.name.$dirty' role="alert">
+                                		<p ng-message="required">Required Field</p>
+                                        <p ng-message="minlength">Your name is too short.</p>
+                                        <p ng-message="pattern">Only Strings</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="mobile">Mobile:</label><br>
+                                <input type='number' name="mobile" ng-model='mobile' required class="form-control" ng-minlength="10" ng-maxlength="10"><br>
+                                <div ng-messages="newCustomer.mobile.$error" ng-show='newCustomer.$submitted || newCustomer.mobile.$dirty' role="alert">
+                                	<p ng-message="required">Required Field</p>
+                                    <p ng-message="minlength">Number Invalid</p>
+                                    <p ng-message="maxlength">Number Invalid</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number:</label><br>
+                                <input type='number' name="phone" ng-model='phone' required class="form-control" ng-minlength="10" ng-maxlength="10"><br>
+                                <div ng-messages="newCustomer.phone.$error" ng-show='newCustomer.$submitted || newCustomer.phone.$dirty' role="alert">
+                                	<p ng-message="required">Required Field</p>
+                                    <p ng-message="minlength">Number Invalid</p>
+                                    <p ng-message="maxlength">Number Invalid</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="dob">Date Of Birth:</label><br>
+                                <input type="date" name="dob" class="form-control" ng-model="dob" required><br>
+                                <div ng-messages="newCustomer.dob.$error" ng-show='newCustomer.$submitted || newCustomer.dob.$dirty' role="alert">
+                                	<p ng-message="required">Required Field</p>
+                               	</div>
+                            </div>
+                            <div class="form-group">
+                            	<label for="dob">Address:</label><br>
+                            	<input class="form-control" type="text" name="street" ng-model="street" required placeholder="Street"><br>
+                            	<div class="col-xs-3">
+                            	<input class="form-control" type="text" name="city" ng-model="city" required placeholder="City">
+                            	</div>
+                            	<div class="col-xs-3">
+                            	<input class="form-control" type="text" name="state" ng-model="state" required placeholder="State">
+                            	</div>
+                            	<div class="col-xs-3">
+                            	<input class="form-control" type="text" name="pin" ng-model="pin" required placeholder="PIN">
+                            	</div>
+                            	<div class="col-xs-3">
+                            	<input class="form-control" type="text" name="country" ng-model="country" required placeholder="Country">
+                            	</div><br>
+                            	<div ng-messages="newCustomer.street.$error" ng-show='newCustomer.$submitted || newCustomer.street.$dirty' role="alert">
+                            		<br>
+                                	<p ng-message="required">Street Address Required</p>
+                                </div>
+                                <div ng-messages="newCustomer.city.$error" ng-show='newCustomer.$submitted || newCustomer.city.$dirty' role="alert">
+                                	<p ng-message="required">City Required</p>
+                                </div>
+                                <div ng-messages="newCustomer.state.$error" ng-show='newCustomer.$submitted || newCustomer.state.$dirty' role="alert">
+                                	<p ng-message="required">State Required</p>
+                                </div>
+                                <div ng-messages="newCustomer.pin.$error" ng-show='newCustomer.$submitted || newCustomer.pin.$dirty' role="alert">
+                                	<p ng-message="required">PIN Required</p>
+                                </div>
+                                <div ng-messages="newCustomer.country.$error" ng-show='newCustomer.$submitted || newCustomer.country.$dirty' role="alert">
+                                	<p ng-message="required">Country Required</p>
+                                </div><br>
+                                <a data-toggle="collapse" data-target="#altAddress" id="altAnchor">Alternate Address</a>
+                                <div id="altAddress" class="collapse">
+                                	<div class="form-group">
+                                		<br>
+		                            	<label for="dob">Alternate Address:</label><br>
+		                            	<input class="form-control" type="text" name="altStreet" ng-model="altStreet" placeholder="Street"><br>
+		                            	<div class="col-xs-3">
+		                            	<input class="form-control" type="text" name="altCity" ng-model="altCity" placeholder="City">
+		                            	</div>
+		                            	<div class="col-xs-3">
+		                            	<input class="form-control" type="text" name="altState" ng-model="altState" placeholder="State">
+		                            	</div>
+		                            	<div class="col-xs-3">
+		                            	<input class="form-control" type="text" name="altPin" ng-model="altPin" placeholder="PIN">
+		                            	</div>
+		                            	<div class="col-xs-3">
+		                            	<input class="form-control" type="text" name="altCountry" ng-model="altCountry" placeholder="Country">
+		                            	</div>
+		                            	<br><br>
+		                            </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label><br>
+                                <input type='email' name="email" ng-model='email' required class="form-control"><br>
+                                <div ng-messages="newCustomer.email.$error" ng-show='newCustomer.$submitted || newCustomer.email.$dirty' role="alert">
+								    <div ng-message="required">Required Field</div>
+								    <div ng-message="email">Your email address is invalid</div>
+							  	</div>
+                            </div>
+                            <input type='submit' value='Create' ng-click='addCustomer()' class="btn btn-info" ng-disabled="newCustomer.$invalid" data-dismiss="modal" ng-hide="editButton">
+                            <input type='submit' value='Update' ng-click='updateCustomer(id)' class="btn btn-info" ng-disabled="newCustomer.$invalid" data-dismiss="modal" ng-show="editButton">
+                        </form>
+                  <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
